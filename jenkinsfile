@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+    environment {
+        IMAGE_NAME = 'sravanio/myimage8'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    bat 'docker build -t %IMAGE_NAME%:%BUILD_ID% .'
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                script {
+                    bat 'docker run --rm %IMAGE_NAME%:%BUILD_ID% cmd /c "make test"'
+                }
+            }
+        }
+        stage('Push') {
+            steps {
+                script {
+                    bat 'docker tag %IMAGE_NAME%:%BUILD_ID% %IMAGE_NAME%:latest'
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    bat 'docker run -d -p 800:80--name staging-app %IMAGE_NAME%:latest'
+                }
+            }
+        }
+    }
+}
