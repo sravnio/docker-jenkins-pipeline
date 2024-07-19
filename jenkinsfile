@@ -1,6 +1,3 @@
-Here is the regenerated Jenkins pipeline script without the `cmd /c` in the Test stage:
-
-```groovy
 pipeline {
     agent any
     environment {
