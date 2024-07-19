@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = 'sravanio/myimage08'
+        IMAGE_NAME = 'sravanio/myimage'
         DOCKER_CREDENTIALS_ID = 'docker' 
     }
     stages {
@@ -34,7 +34,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    bat 'docker run -d -p 811:80 --name cont_s01 %IMAGE_NAME%:latest'
+                    bat 'docker run -d -p 811:80 --name container %IMAGE_NAME%:latest'
                 }
             }
         }
