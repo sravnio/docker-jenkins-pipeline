@@ -1,7 +1,8 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = 'sravanio/myimage8'
+        IMAGE_NAME = 'sravanio/myimage08'
+        DOCKER_CREDENTIALS_ID = 'docker' 
     }
     stages {
         stage('Build') {
@@ -21,17 +22,21 @@ pipeline {
         stage('Push') {
             steps {
                 script {
-                    bat 'docker tag %IMAGE_NAME%:%BUILD_ID% %IMAGE_NAME%:latest'
+                    withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        bat 'docker login -u %DOCKER_USER% -p %DOCKER_PASS%'
+                        bat 'docker tag %IMAGE_NAME%:%BUILD_ID% %IMAGE_NAME%:latest'
+                        bat 'docker push %IMAGE_NAME%:%BUILD_ID%'
+                        bat 'docker push %IMAGE_NAME%:latest'
+                    }
                 }
             }
         }
         stage('Deploy') {
             steps {
                 script {
-                    bat 'docker run -d -p 810:80 --name staging-app %IMAGE_NAME%:latest'
+                    bat 'docker run -d -p 811:80 --name cont_s01 %IMAGE_NAME%:latest'
                 }
             }
         }
     }
 }
-```
