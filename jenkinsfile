@@ -1,3 +1,6 @@
+Here is the regenerated Jenkins pipeline script without the `cmd /c` in the Test stage:
+
+```groovy
 pipeline {
     agent any
     environment {
@@ -14,7 +17,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    bat 'docker run --rm %IMAGE_NAME%:%BUILD_ID% cmd /c "make test"'
+                    bat 'docker run --rm %IMAGE_NAME%:%BUILD_ID% make test'
                 }
             }
         }
@@ -28,9 +31,10 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    bat 'docker run -d -p 800:80--name staging-app %IMAGE_NAME%:latest'
+                    bat 'docker run -d -p 810:80 --name staging-app %IMAGE_NAME%:latest'
                 }
             }
         }
     }
 }
+```
